@@ -10,9 +10,9 @@ STEAM_URL = "https://store.steampowered.com/"
 WAIT_TIME = 15
 
 # Чтобы убедиться, что страница загрузилась
-STEAM_LOGO_LOCATOR = (By.XPATH, "//div[@id='global_header']//a[contains(@href, 'steampowered.com')]")
+STEAM_LOGO_LOCATOR = (By.XPATH, "//*[@id='global_header']//a[contains(@href, 'steampowered.com')]")
 
-LOGIN_BUTTON_LOCATOR = (By.XPATH, "//a[@class='global_action_link' and text()='войти']")
+LOGIN_BUTTON_LOCATOR = (By.XPATH, "//a[contains(@class, 'global_action_link') and text()='войти']")
 
 USERNAME_INPUT_LOCATOR = (
     By.XPATH, "//form//input[@type='text']")
@@ -24,14 +24,17 @@ SIGN_IN_BUTTON_LOCATOR = (By.XPATH, "//form//button[@type='submit']")
 
 LOADING_SPINNER_LOCATOR = (By.XPATH, "//form//button[contains(@class, ' ') and @type='submit']")
 
-ERROR_LOCATOR = (By.XPATH, "//form//div[contains(text(), 'Пожалуйста, проверьте свой пароль')]")
+ERROR_LOCATOR = (
+    By.XPATH,
+    "//form//button[@type='submit']/following::div[normalize-space()][1]"
+)
 
-# //form//button[@type='submit']//following-sibling::div[1]
 
 @pytest.fixture
 def driver():
     driver = webdriver.Chrome()
     driver.maximize_window()
+    driver.get(STEAM_URL)
     yield driver
     driver.quit()
 
@@ -43,12 +46,18 @@ def test_steam(driver):
 
     password_data = fake.password(length=16, special_chars=True, upper_case=True, lower_case=True, digits=True)
 
-    driver.get(STEAM_URL)
-
     wait = WebDriverWait(driver, WAIT_TIME)
 
     # Убеждаемся в загрузке страницы.
-    wait.until(EC.visibility_of_element_located(STEAM_LOGO_LOCATOR))
+    # wait.until(EC.visibility_of_element_located(STEAM_LOGO_LOCATOR))
+
+    expected_url = STEAM_URL
+    actual_url = driver.current_url
+
+    assert expected_url == actual_url, \
+        f"Открылась не главная страница.\n" \
+        f"Ожидали URL: '{expected_url}'\n" \
+        f"Фактический URL: '{actual_url}'"
 
     login_button = wait.until(EC.element_to_be_clickable(LOGIN_BUTTON_LOCATOR))
 
