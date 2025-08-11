@@ -1,0 +1,33 @@
+import pytest
+from pages.main_page import MainPage
+from pages.search_results_page import SearchResultsPage
+
+
+@pytest.mark.parametrize("game_name, num_results_to_check", [
+    ("The Witcher", 10),
+    ("Fallout", 20)
+])
+def test_game_search_and_sort(driver, game_name, num_results_to_check):
+    main_page = MainPage(driver)
+    main_page.open()
+    main_page.search_for_game(game_name)
+    search_results_page = SearchResultsPage(driver)
+    search_results_page.sort_by_price_desc()
+
+    # список цен из N игр
+    prices = search_results_page.get_top_n_prices(num_results_to_check)
+
+    #    цены по убыванию.
+    expected_sorted_prices = sorted(prices, reverse=True)
+
+    print("Ожидаемые цены: " + ", ".join(map(str, expected_sorted_prices)))
+
+    print("Фактическая цены: " + ", ".join(map(str, prices)))
+
+    assert prices == expected_sorted_prices, \
+        (f"Сортировка по убыванию цены работает некорректно. "
+         f"Ожидаемый порядок (отсортированный): {expected_sorted_prices} "
+         f"Фактический порядок со страницы:     {prices}")
+
+    print(f" Проверка для '{game_name}' успешна. "
+          f"Цены первых {num_results_to_check} товаров действительно отсортированы по убыванию.")
