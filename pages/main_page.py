@@ -1,26 +1,25 @@
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
-#import config
+from core.config_reader import ConfigReader
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
+# import config
 
 class MainPage(BasePage):
-
     STEAM_URL = "https://store.steampowered.com/"
 
-    SEARCH_INPUT = (By.XPATH, "//*[@id='store_nav_search_term']")
+    SEARCH_INPUT = (By.ID, "store_nav_search_term")
 
-    # уникальный элемент главной страницы для ожидания загрузки
     CAROUSEL = (By.XPATH, "//*[contains(@class, 'carousel_container')]")
 
     def __init__(self, driver):
         super().__init__(driver)
 
-    def open(self):
-        super().open(self.STEAM_URL)
-        # Ждем, пока загрузится уникальный элемент именно главной страницы!!
-        self.find_element(self.CAROUSEL)
-
     def search_for_game(self, query: str):
-        search_field = self.find_element(self.SEARCH_INPUT)
+        wait = WebDriverWait(self.driver, ConfigReader.get_wait_time())
+        search_field = wait.until(EC.element_to_be_clickable(self.SEARCH_INPUT))
         search_field.clear()
         search_field.send_keys(query)
-        search_field.submit()  # Эмулирует нажатие Enter, переходя на страницу результатов
+        search_field.submit()
