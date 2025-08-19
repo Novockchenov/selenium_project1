@@ -13,6 +13,7 @@ def test_game_search_and_sort(driver, game_name, num_results_to_check):
     driver.get(base_url)
 
     main_page = MainPage(driver)
+    main_page.wait_for_page_load()
     main_page.search_for_game(game_name)
 
     search_results_page = SearchResultsPage(driver)

@@ -19,31 +19,30 @@ class SearchResultsPage(BasePage):
 
     SEARCH_RESULT_PRICE = (By.XPATH, ".//div[contains(@class, 'search_price')]")
 
+    ALL_PRICES_IN_ROWS = (By.XPATH, "//a[contains(@class, 'search_result_row')]//div[contains(@class, 'search_price')]")
+
     def __init__(self, driver):
         super().__init__(driver)
 
     def wait_for_page_load(self):
-
         wait = WebDriverWait(self.driver, self.DEFAULT_WAIT_TIME)
         wait.until(EC.visibility_of_element_located(self.SEARCH_RESULTS_CONTAINER))
         return self
 
     def sort_by_price_desc(self):
-
         wait = WebDriverWait(self.driver, self.DEFAULT_WAIT_TIME)
+
+        first_game_before_sort = wait.until(
+            EC.presence_of_element_located(self.SEARCH_RESULT_ROWS)
+        )
 
         dropdown = wait.until(EC.element_to_be_clickable(self.SORT_BY_DROPDOWN))
         dropdown.click()
 
-        price_desc_option = WebDriverWait(self.driver, self.DEFAULT_WAIT_TIME).until(
-            EC.element_to_be_clickable(self.SORT_BY_PRICE_DESC_OPTION)
-        )
-
+        price_desc_option = wait.until(EC.element_to_be_clickable(self.SORT_BY_PRICE_DESC_OPTION))
         price_desc_option.click()
 
-        WebDriverWait(self.driver, self.DEFAULT_WAIT_TIME).until(
-            EC.url_contains(self.PRICE_DESC_SORT_URL_PARAM)
-        )
+        wait.until(EC.staleness_of(first_game_before_sort))
 
     def get_top_n_prices(self, n: int) -> list[float]:
         """
@@ -52,18 +51,10 @@ class SearchResultsPage(BasePage):
         """
         wait = WebDriverWait(self.driver, self.DEFAULT_WAIT_TIME)
 
-        game_rows = wait.until(EC.presence_of_all_elements_located(self.SEARCH_RESULT_ROWS))[:n]
+        all_price_elements = wait.until(EC.presence_of_all_elements_located(self.ALL_PRICES_IN_ROWS))[:n]
 
         prices = []
-
-        for row in game_rows:
-            price_elements = row.find_elements(*self.SEARCH_RESULT_PRICE)
-
-            if price_elements:
-                price_text = price_elements[0].text
-                price_as_float = PriceParser.parse_price(price_text)
-                prices.append(price_as_float)
-            else:
-
-                prices.append(0.0)
+        for price_element in all_price_elements:
+            price_as_float = PriceParser.parse_price(price_element.text)
+            prices.append(price_as_float)
         return prices
