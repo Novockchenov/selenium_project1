@@ -13,7 +13,6 @@ class SearchResultsPage(BasePage):
     SEARCH_RESULTS_CONTAINER = (By.ID, "search_resultsRows")
     SORT_BY_DROPDOWN = (By.ID, "sort_by_trigger")
     SORT_BY_PRICE_DESC_OPTION = (By.ID, "Price_DESC")
-    PRICE_DESC_SORT_URL_PARAM = "sort_by=Price_DESC"
     SEARCH_RESULT_ROWS = (By.XPATH, "//a[contains(@class, 'search_result_row')]")
     SEARCH_RESULT_TITLE = (By.XPATH, ".//span[@class='title']")
 
@@ -21,28 +20,19 @@ class SearchResultsPage(BasePage):
 
     ALL_PRICES_IN_ROWS = (By.XPATH, "//a[contains(@class, 'search_result_row')]//div[contains(@class, 'search_price')]")
 
-    def __init__(self, driver):
-        super().__init__(driver)
+    LOADING_OVERLAY = (By.ID, "search_results_loading")
 
     def wait_for_page_load(self):
-        wait = WebDriverWait(self.driver, self.DEFAULT_WAIT_TIME)
-        wait.until(EC.visibility_of_element_located(self.SEARCH_RESULTS_CONTAINER))
-        return self
+        self.wait.until(EC.visibility_of_element_located(self.SEARCH_RESULTS_CONTAINER))
 
     def sort_by_price_desc(self):
-        wait = WebDriverWait(self.driver, self.DEFAULT_WAIT_TIME)
-
-        first_game_before_sort = wait.until(
-            EC.presence_of_element_located(self.SEARCH_RESULT_ROWS)
-        )
-
-        dropdown = wait.until(EC.element_to_be_clickable(self.SORT_BY_DROPDOWN))
+        dropdown = self.wait.until(EC.element_to_be_clickable(self.SORT_BY_DROPDOWN))
         dropdown.click()
 
-        price_desc_option = wait.until(EC.element_to_be_clickable(self.SORT_BY_PRICE_DESC_OPTION))
+        price_desc_option = self.wait.until(EC.element_to_be_clickable(self.SORT_BY_PRICE_DESC_OPTION))
         price_desc_option.click()
 
-        wait.until(EC.staleness_of(first_game_before_sort))
+        self.wait.until(EC.invisibility_of_element_located(self.LOADING_OVERLAY))
 
     def get_top_n_prices(self, n: int) -> list[float]:
         """

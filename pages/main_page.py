@@ -13,14 +13,11 @@ class MainPage(BasePage):
     CAROUSEL = (By.XPATH, "//*[contains(@class, 'carousel_container')]")
 
     def wait_for_page_load(self):
-        wait = WebDriverWait(self.driver, self.DEFAULT_WAIT_TIME)
-        wait.until(EC.visibility_of_element_located(self.CAROUSEL))
-        return self
+        self.wait.until(EC.visibility_of_element_located(self.CAROUSEL))
 
     def search_for_game(self, query: str):
-        wait = WebDriverWait(self.driver, self.DEFAULT_WAIT_TIME)
-        search_field = wait.until(EC.element_to_be_clickable(self.SEARCH_INPUT))
+        search_field = self.wait.until(EC.element_to_be_clickable(self.SEARCH_INPUT))
         search_field.clear()
-        search_field = wait.until(EC.element_to_be_clickable(self.SEARCH_INPUT))
+        search_field = self.wait.until(EC.element_to_be_clickable(self.SEARCH_INPUT))
         search_field.send_keys(query)
         search_field.submit()
