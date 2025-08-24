@@ -1,0 +1,8 @@
+{
+  "default_wait_time": 15,
+  "base_url": "https://store.steampowered.com/",
+  "driver_options": [
+    "--window-size=1920,1080",
+    "--headless"
+  ]
+}
