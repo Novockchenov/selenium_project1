@@ -8,6 +8,8 @@ def test_context_menu(browser):
     context_page.wait_for_open()
     context_page.click_hot_spot_area()
     browser.wait_alert_present()
-    alert_text = browser.get_alert_text()
-    assert alert_text == "You selected a context menu", "Неверный текст в алерте"
+    expected_text = "You selected a context menu"
+    actual_text = browser.get_alert_text()
+    assert actual_text == expected_text, \
+        f"Текст в алерте неверный. Ожидали: '{expected_text}', получили: '{actual_text}'"
     browser.accept_alert()

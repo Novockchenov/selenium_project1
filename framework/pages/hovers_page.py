@@ -1,4 +1,3 @@
-from selenium.webdriver.common.by import By
 from framework.pages.base_page import BasePage
 from framework.elements.web_element import WebElement
 from framework.elements.multi_web_element import MultiWebElement
@@ -6,8 +5,11 @@ from framework.elements.multi_web_element import MultiWebElement
 
 class HoversPage(BasePage):
     """Описывает страницу с элементами, появляющимися при наведении."""
-    UNIQUE_ELEMENT_LOC = (By.XPATH, "//div[@class='figure']")
-    USER_FIGURES_LOC_TEMPLATE = "//div[@class='figure'][{}]"
+    UNIQUE_ELEMENT_LOC = "//div[contains(@class, 'figure')]"
+    USER_FIGURES_LOC_TEMPLATE = "//div[contains(@class, 'figure')][{}]"
+
+    USERNAME_LOC_TEMPLATE = "(//div[contains(@class,'figure')])[{}]//h5"
+    PROFILE_LINK_LOC_TEMPLATE = "(//div[contains(@class,'figure')])[{}]//a"
 
     def __init__(self, browser):
         super().__init__(browser)
@@ -15,25 +17,27 @@ class HoversPage(BasePage):
         self.unique_element = WebElement(self.browser, self.UNIQUE_ELEMENT_LOC, "User Figure")
         self.user_figures = MultiWebElement(self.browser, self.USER_FIGURES_LOC_TEMPLATE, "User Figure")
 
-    def get_user_figure_by_index(self, index: int) -> WebElement:
+    def hover_on_user(self, index: int):
         """
-        Находит и возвращает конкретный WebElement аватара по его номеру (1, 2 или 3).
+        Наводит курсор на аватар пользователя с указанным индексом.
+        Вся логика поиска элемента и вызова .move_to() спрятана здесь.
         """
-        locator = (By.XPATH, self.USER_FIGURES_LOC_TEMPLATE.format(index))
-        return WebElement(self.browser, locator, f"User Figure {index}")
+        locator = self.USER_FIGURES_LOC_TEMPLATE.format(index)
+        user_figure = WebElement(self.browser, locator, f"User Figure {index}")
+        user_figure.move_to()
 
-    def get_username_for_user(self, index: int) -> WebElement:
+    def get_username_text(self, index: int) -> str:
         """
-        Находит и возвращает элемент с именем пользователя,
-        который появляется при наведении на аватар с указанным индексом.
+        Возвращает имя пользователя в виде строки (str).
         """
-        locator = (By.XPATH, f"{self.USER_FIGURES_LOC_TEMPLATE.format(index)}//h5")
-        return WebElement(self.browser, locator, f"Username for user {index}")
+        locator = self.USERNAME_LOC_TEMPLATE.format(index)
+        username_element = WebElement(self.browser, locator, f"Username for user {index}")
+        return username_element.get_text()
 
-    def get_profile_link_for_user(self, index: int) -> WebElement:
+    def click_view_profile_link(self, index: int):
         """
-        Находит и возвращает ссылку "View profile" для пользователя
-        с указанным индексом.
+        Кликает по ссылке 'View profile' для указанного пользователя.
         """
-        locator = (By.XPATH, f"{self.USER_FIGURES_LOC_TEMPLATE.format(index)}//a")
-        return WebElement(self.browser, locator, f"Profile link for user {index}")
+        locator = self.PROFILE_LINK_LOC_TEMPLATE.format(index)
+        profile_link = WebElement(self.browser, locator, f"Profile link for user {index}")
+        profile_link.click()

@@ -1,15 +1,14 @@
 from framework.elements.button import Button
 from framework.elements.web_element import WebElement
 from framework.pages.base_page import BasePage
-from selenium.webdriver.common.by import By
 
 
 class AlertsPage(BasePage):
-    UNIQUE_ELEMENT_LOC = (By.XPATH, "//h3[text()='JavaScript Alerts']")
-    JS_ALERT_BUTTON_LOC = (By.XPATH, "//button[text()='Click for JS Alert']")
-    JS_CONFIRM_BUTTON_LOC = (By.XPATH, "//button[text()='Click for JS Confirm']")
-    JS_PROMPT_BUTTON_LOC = (By.XPATH, "//button[text()='Click for JS Prompt']")
-    RESULT_TEXT_LOC = (By.ID, "result")
+    UNIQUE_ELEMENT_LOC = "//h3[text()='JavaScript Alerts']"
+    JS_ALERT_BUTTON_LOC = "//button[text()='Click for JS Alert']"
+    JS_CONFIRM_BUTTON_LOC = "//button[text()='Click for JS Confirm']"
+    JS_PROMPT_BUTTON_LOC = "//button[text()='Click for JS Prompt']"
+    RESULT_TEXT_LOC = "result"
 
     def __init__(self, browser):
         super().__init__(browser)
@@ -24,3 +23,11 @@ class AlertsPage(BasePage):
     def get_result_text(self) -> str:
         """Возвращает текст из поля Result."""
         return self.result_text.get_text()
+
+    def click_for_js_alert(self):
+        """Кликает по кнопке 'Click for JS Alert'."""
+        self.js_alert_button.click()
+
+    def click_for_js_confirm(self):
+        """Кликает по кнопке 'Click for JS Confirm'."""
+        self.js_confirm_button.click()

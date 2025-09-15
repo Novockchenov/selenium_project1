@@ -10,13 +10,14 @@ def test_dynamic_content_for_duplicates(browser):
     dynamic_page.wait_for_open()
 
     timeout = time.time() + 30
+    duplicates_found = False
 
     while time.time() < timeout:
         sources = dynamic_page.get_image_sources()
         if len(sources) != len(set(sources)):
             print(f"Найдены дубликаты: {sources}")
-            assert True
-            return
+            duplicates_found = True
+            break
         browser.driver.refresh()
 
-    pytest.fail("Не удалось найти дубликаты изображений за 30 секунд")
+    assert duplicates_found, "Не удалось найти дубликаты изображений за 30 секунд"

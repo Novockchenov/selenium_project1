@@ -1,10 +1,9 @@
 from framework.elements.web_element import WebElement
 from framework.pages.base_page import BasePage
-from selenium.webdriver.common.by import By
 
 
 class ContextMenuPage(BasePage):
-    UNIQUE_ELEMENT_LOC = (By.XPATH, "//*[@id='hot-spot']")
+    UNIQUE_ELEMENT_LOC = "//*[@id='hot-spot']"
 
     def __init__(self, browser):
         super().__init__(browser)

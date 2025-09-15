@@ -1,13 +1,13 @@
-from selenium.webdriver.common.by import By
 from framework.pages.base_page import BasePage
 from framework.elements.multi_web_element import MultiWebElement
 from framework.elements.web_element import WebElement
+from selenium.common.exceptions import TimeoutException
 
 
 class InfinityScrollPage(BasePage):
     """Описывает страницу с бесконечной прокруткой."""
-    UNIQUE_ELEMENT_LOC = (By.XPATH, "//div[@class='jscroll-inner']")
-    PARAGRAPHS_LOC = "//div[@class='jscroll-inner']/div[@class='jscroll-added'][{}]"
+    UNIQUE_ELEMENT_LOC = "//div[contains(@class, 'jscroll-inner')]"
+    PARAGRAPHS_LOC = "(//div[contains(@class, 'jscroll-inner')]/div)[{}]"
 
     def __init__(self, browser):
         super().__init__(browser)
@@ -19,6 +19,24 @@ class InfinityScrollPage(BasePage):
         """Считает количество абзацев на странице."""
         return len(list(self.paragraphs))
 
-    def scroll_down(self):
-        """Прокручивает страницу вниз, используя метод нашего браузера."""
-        self.browser.scroll_to_bottom()
+    def scroll_to_load_new_content(self):
+        """
+        Находит последний абзац и прокручивает к нему,
+        чтобы инициировать загрузку нового контента.
+        """
+        all_paragraphs = list(self.paragraphs)
+        initial_count = len(all_paragraphs)
+
+        if not all_paragraphs:
+            return
+
+        last_paragraph = all_paragraphs[-1]
+        last_paragraph.scroll_to_element()
+
+        try:
+            self.browser.wait.until(
+                lambda _: self.get_paragraphs_count() > initial_count
+            )
+        except TimeoutException:
+
+            print("Внимание: Новый контент не подгрузился после скролла.")

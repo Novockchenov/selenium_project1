@@ -1,4 +1,3 @@
-from selenium.webdriver.common.by import By
 from framework.pages.base_page import BasePage
 from framework.elements.web_element import WebElement
 from framework.elements.button import Button
@@ -7,11 +6,11 @@ from framework.utils.pyautogui_utils import PyAutoGuiUtilities
 
 class FileUploadPage(BasePage):
     """Описывает страницу загрузки файлов."""
-    UNIQUE_ELEMENT_LOC = (By.ID, "file-upload")
-    UPLOAD_INPUT_LOC = (By.ID, "file-upload")
-    UPLOAD_BUTTON_LOC = (By.ID, "file-submit")
-    DRAG_DROP_AREA_LOC = (By.ID, "drag-drop-upload")
-    UPLOADED_FILES_PANEL_LOC = (By.ID, "uploaded-files")
+    UNIQUE_ELEMENT_LOC = "file-upload"
+    UPLOAD_INPUT_LOC = "file-upload"
+    UPLOAD_BUTTON_LOC = "file-submit"
+    DRAG_DROP_AREA_LOC = "drag-drop-upload"
+    UPLOADED_FILES_PANEL_LOC = "uploaded-files"
 
     def __init__(self, browser):
         super().__init__(browser)

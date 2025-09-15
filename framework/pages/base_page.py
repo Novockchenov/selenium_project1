@@ -1,10 +1,10 @@
 from framework.browser.browser import Browser
 from framework.logger.logger import Logger
-from typing import ClassVar, Optional
+from typing import ClassVar, Optional, Union
 
 
 class BasePage:
-    UNIQUE_ELEMENT_LOC: ClassVar[Optional[tuple]] = None
+    UNIQUE_ELEMENT_LOC: ClassVar[Optional[Union[tuple, str]]] = None
 
     def __init__(self, browser: Browser):
         self.browser = browser

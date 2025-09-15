@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 class BaseElement:
     DEFAULT_TIMEOUT = 10
 
-    def __init__(self, browser: 'Browser', locator: tuple, description: str = None,
+    def __init__(self, browser: 'Browser', locator: str, description: str = None,
                  timeout: int = DEFAULT_TIMEOUT) -> None:
         self.browser = browser
         self.timeout = timeout
@@ -126,6 +126,12 @@ class BaseElement:
         except WebDriverException as err:
             Logger.error(f"{self}: {err}")
             raise
+
+    def scroll_to_element(self) -> None:
+        """Скроллит страницу до видимости элемента."""
+        element = self.wait_for_presence()
+        Logger.info(f"{self}: скроллю до элемента")
+        self.browser.execute_script("arguments[0].scrollIntoView(true);", element)
 
     def is_exists(self) -> bool:
         """

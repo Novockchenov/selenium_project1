@@ -1,7 +1,12 @@
 from selenium import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
-from framework.utils.available_driver_name import AvailableDriverName
 from framework.logger.logger import Logger
+from enum import Enum
+
+
+class AvailableDriverName(Enum):
+    CHROME = "chrome"
+    FIREFOX = "firefox"
 
 
 class BrowserFactory:

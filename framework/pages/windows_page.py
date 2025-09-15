@@ -1,10 +1,9 @@
 from framework.elements.web_element import WebElement
 from framework.pages.base_page import BasePage
-from selenium.webdriver.common.by import By
 
 
 class WindowsPage(BasePage):
-    UNIQUE_ELEMENT_LOC = (By.XPATH, "//a[text()='Click Here']")
+    UNIQUE_ELEMENT_LOC = "//a[text()='Click Here']"
 
     def __init__(self, browser):
         super().__init__(browser)
@@ -16,7 +15,7 @@ class WindowsPage(BasePage):
 
 
 class NewWindowPage(BasePage):
-    UNIQUE_ELEMENT_LOC = (By.XPATH, "//h3[contains(text(), 'New Window')]")
+    UNIQUE_ELEMENT_LOC = "//h3[contains(text(), 'New Window')]"
 
     def __init__(self, browser):
         super().__init__(browser)

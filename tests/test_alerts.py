@@ -9,14 +9,14 @@ def test_alerts(browser):
     alerts_page.browser.open(alerts_page_url)
     alerts_page.wait_for_open()
 
-    alerts_page.js_alert_button.click()
+    alerts_page.click_for_js_alert()
     browser.wait_alert_present()
     alert_text = browser.get_alert_text()
     assert alert_text == "I am a JS Alert", "Неверный текст в JS Alert"
     browser.accept_alert()
     assert alerts_page.get_result_text() == "You successfully clicked an alert", "Неверный результат после JS Alert"
 
-    alerts_page.js_confirm_button.click()
+    alerts_page.click_for_js_confirm()
     browser.wait_alert_present()
     alert_text = browser.get_alert_text()
     assert alert_text == "I am a JS Confirm", "Неверный текст в JS Confirm"
@@ -39,12 +39,12 @@ def test_alerts_with_js_click(browser):
     alerts_page.browser.open(alerts_page_url)
     alerts_page.wait_for_open()
 
-    alerts_page.js_alert_button.js_click()
+    alerts_page.click_for_js_alert()
     browser.wait_alert_present()
     browser.accept_alert()
     assert "You successfully clicked an alert" in alerts_page.get_result_text()
 
-    alerts_page.js_confirm_button.js_click()
+    alerts_page.click_for_js_confirm()
     browser.wait_alert_present()
     browser.accept_alert()
     assert "You clicked: Ok" in alerts_page.get_result_text()

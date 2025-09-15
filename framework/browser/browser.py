@@ -65,7 +65,7 @@ class Browser:
     def switch_to_window(self, title: str) -> None:
         Logger.info(f"switch to window with title '{title}'")
         end_time = time.time() + self.PAGE_LOAD_TIMEOUT
-        while time.time() < end_time:  # <-- Цикл работает, ПОКА время не вышло
+        while time.time() < end_time:
             for handle in self.driver.window_handles:
                 self.driver.switch_to.window(handle)
                 if self.driver.title == title:
@@ -80,15 +80,18 @@ class Browser:
         self.wait.until(expected_conditions.alert_is_present())
 
     def get_alert_text(self) -> str:
+        self.wait_alert_present()
         Logger.info(f"get alert text")
         alert = self.driver.switch_to.alert
         return alert.text
 
     def accept_alert(self) -> None:
+        self.wait_alert_present()
         Logger.info(f"accept alert")
         self.driver.switch_to.alert.accept()
 
     def send_keys_to_alert(self, text: str) -> None:
+        self.wait_alert_present()
         Logger.info(f"Отправляю текст '{text}' в алерт")
         try:
             self.driver.switch_to.alert.send_keys(text)
@@ -115,7 +118,6 @@ class Browser:
         Logger.info("Выполняю прокрутку страницы вниз")
         try:
             self.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(2)
         except WebDriverException as err:
             Logger.error(f"{err}")
             raise

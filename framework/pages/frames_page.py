@@ -1,6 +1,5 @@
 from framework.pages.base_page import BasePage
 from framework.elements.web_element import WebElement
-from selenium.webdriver.common.by import By
 
 
 class FramesMainPage(BasePage):
@@ -8,9 +7,9 @@ class FramesMainPage(BasePage):
     Эта страница описывает стартовую страницу "Frames",
     с которой можно перейти на "Nested Frames" или "iFrame".
     """
-    UNIQUE_ELEMENT_LOC = (By.XPATH, "//a[contains(text(), 'Nested Frames')]")
-    NESTED_FRAMES_LINK_LOC = (By.XPATH, "//a[contains(text(), 'Nested Frames')]")
-    IFRAME_LINK_LOC = (By.XPATH, "//a[contains(text(), 'iFrame')]")
+    UNIQUE_ELEMENT_LOC = "//a[contains(text(), 'Nested Frames')]"
+    NESTED_FRAMES_LINK_LOC = "//a[contains(text(), 'Nested Frames')]"
+    IFRAME_LINK_LOC = "//a[contains(text(), 'iFrame')]"
 
     def __init__(self, browser: "Browser"):
         super().__init__(browser)
@@ -37,12 +36,12 @@ class NestedFramesPage(BasePage):
     Эта страница описывает страницу с вложенными фреймами (top, bottom, left и т.д.).
     Она содержит элементы, которые являются самими тегами <frame>.
     """
-    UNIQUE_ELEMENT_LOC = (By.XPATH, "//frame[@name='frame-top']")
-    FRAME_TOP_LOC = (By.XPATH, "//frame[@name='frame-top']")
-    FRAME_BOTTOM_LOC = (By.XPATH, "//frame[@name='frame-bottom']")
-    FRAME_LEFT_LOC = (By.XPATH, "//frame[@name='frame-left']")
-    FRAME_MIDDLE_LOC = (By.XPATH, "//frame[@name='frame-middle']")
-    BODY_LOC = (By.XPATH, "//body")
+    UNIQUE_ELEMENT_LOC = "//frame[@name='frame-top']"
+    FRAME_TOP_LOC = "//frame[@name='frame-top']"
+    FRAME_BOTTOM_LOC = "//frame[@name='frame-bottom']"
+    FRAME_LEFT_LOC = "//frame[@name='frame-left']"
+    FRAME_MIDDLE_LOC = "//frame[@name='frame-middle']"
+    BODY_LOC = "//body"
 
     def __init__(self, browser: "Browser"):
         super().__init__(browser)
