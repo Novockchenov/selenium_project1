@@ -13,7 +13,7 @@ def test_slider(browser):
     possible_values = [min_val + i * step for i in range(int((max_val - min_val) / step) + 1)]
     target_value = random.choice(possible_values)
     slider_page.set_slider_value(target_value)
-
     actual_value = float(slider_page.get_slider_value())
+
     assert actual_value == target_value, \
         f"Значение слайдера установлено неверно. Ожидали: {target_value}, получили: {actual_value}"

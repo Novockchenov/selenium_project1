@@ -1,5 +1,4 @@
-from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -7,7 +6,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.support import expected_conditions
 from framework.logger.logger import Logger
-from selenium.webdriver.common.keys import Keys
+
 
 if TYPE_CHECKING:
     from framework.browser.browser import Browser
@@ -16,7 +15,7 @@ if TYPE_CHECKING:
 class BaseElement:
     DEFAULT_TIMEOUT = 10
 
-    def __init__(self, browser: 'Browser', locator: str, description: str = None,
+    def __init__(self, browser: 'Browser', locator: Union[str, tuple], description: str = None,
                  timeout: int = DEFAULT_TIMEOUT) -> None:
         self.browser = browser
         self.timeout = timeout
@@ -135,11 +134,14 @@ class BaseElement:
 
     def is_exists(self) -> bool:
         """
-        Проверяет, существует ли элемент в DOM.
-        Возвращает True, если элемент найден в течение таймаута, иначе False.
+        Проверяет, существует ли элемент в DOM, не ожидая долго
+        и не записывая ошибку в лог в случае отсутствия.
+        Возвращает True, если элемент найден, иначе False.
         """
         try:
-            self.wait_for_presence()
+            wait = WebDriverWait(self.browser.driver, timeout=0)
+            wait.until(expected_conditions.presence_of_element_located(self.locator))
             return True
         except TimeoutException:
             return False
+

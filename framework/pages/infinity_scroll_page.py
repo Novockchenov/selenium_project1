@@ -1,3 +1,5 @@
+import time
+from framework.logger.logger import Logger
 from framework.pages.base_page import BasePage
 from framework.elements.multi_web_element import MultiWebElement
 from framework.elements.web_element import WebElement
@@ -19,24 +21,30 @@ class InfinityScrollPage(BasePage):
         """Считает количество абзацев на странице."""
         return len(list(self.paragraphs))
 
-    def scroll_to_load_new_content(self):
+    def scroll_to_load_new_content(self, target_count: int):
         """
         Находит последний абзац и прокручивает к нему,
         чтобы инициировать загрузку нового контента.
         """
-        all_paragraphs = list(self.paragraphs)
-        initial_count = len(all_paragraphs)
+        Logger.info(f"Начинаю скролл, пока не будет {target_count} абзацев.")
+        timeout = time.time() + 60
 
-        if not all_paragraphs:
-            return
+        while self.get_paragraphs_count() < target_count:
+            if time.time() > timeout:
+                Logger.error(f"Не удалось достичь {target_count} абзацев за 60 секунд.")
+                break
 
-        last_paragraph = all_paragraphs[-1]
-        last_paragraph.scroll_to_element()
+            initial_count = self.get_paragraphs_count()
+            all_paragraphs = list(self.paragraphs)
+            if not all_paragraphs:
+                break
 
-        try:
-            self.browser.wait.until(
-                lambda _: self.get_paragraphs_count() > initial_count
-            )
-        except TimeoutException:
+            last_paragraph = all_paragraphs[-1]
+            last_paragraph.scroll_to_element()
 
-            print("Внимание: Новый контент не подгрузился после скролла.")
+            try:
+                self.browser.wait.until(lambda _: self.get_paragraphs_count() > initial_count)
+                Logger.info(f"Количество абзацев: {self.get_paragraphs_count()}")
+            except TimeoutException:
+                Logger.warning("Контент не подгрузился после скролла. Прерываю цикл.")
+                break

@@ -4,7 +4,7 @@ from framework.pages.base_page import BasePage
 
 class BasicAuthPage(BasePage):
     SUCCESS_MESSAGE_LOC = "//p[contains(text(), 'Congratulations')]"
-    UNIQUE_ELEMENT_LOC = SUCCESS_MESSAGE_LOC
+    UNIQUE_ELEMENT_LOC = "//p[contains(text(), 'Congratulations')]"
 
     def __init__(self, browser):
         super().__init__(browser)

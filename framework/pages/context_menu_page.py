@@ -3,7 +3,7 @@ from framework.pages.base_page import BasePage
 
 
 class ContextMenuPage(BasePage):
-    UNIQUE_ELEMENT_LOC = "//*[@id='hot-spot']"
+    UNIQUE_ELEMENT_LOC = "hot-spot"
 
     def __init__(self, browser):
         super().__init__(browser)

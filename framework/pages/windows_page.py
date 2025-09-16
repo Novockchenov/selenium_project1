@@ -13,6 +13,10 @@ class WindowsPage(BasePage):
     def click_here(self):
         self.unique_element.click()
 
+    def get_link_text(self) -> str:
+        """Возвращает текст ссылки 'Click Here'."""
+        return self.unique_element.get_text()
+
 
 class NewWindowPage(BasePage):
     UNIQUE_ELEMENT_LOC = "//h3[contains(text(), 'New Window')]"

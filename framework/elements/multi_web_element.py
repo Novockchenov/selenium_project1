@@ -4,7 +4,7 @@ from framework.elements.web_element import WebElement
 
 
 class MultiWebElement:
-    DEFAULT_TIMEOUT = 10
+    DEFAULT_TIMEOUT = 20
 
     def __init__(
             self,
