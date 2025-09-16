@@ -11,7 +11,8 @@ class SliderPage(BasePage):
     def __init__(self, browser):
         super().__init__(browser)
         self.page_name = "Slider Page"
-        self.unique_element = WebElement(self.browser, self.UNIQUE_ELEMENT_LOC, "Slider")
+        self.unique_element = WebElement(self.browser, self.UNIQUE_ELEMENT_LOC, "Slider Presence Marker")
+        self.slider = WebElement(self.browser, self.SLIDER_LOC, "Slider")
         self.slider_value = WebElement(self.browser, self.SLIDER_VALUE_LOC, "Slider Value")
 
     def get_slider_value(self) -> str:
@@ -19,7 +20,7 @@ class SliderPage(BasePage):
         return self.slider_value.get_text()
 
     def get_slider_step(self) -> float:
-        return float(self.unique_element.get_attribute("step"))
+        return float(self.slider.get_attribute("step"))
 
     def set_slider_value(self, target_value: float):
         """Устанавливает значение слайдера, нажимая стрелку вправо."""
@@ -29,10 +30,10 @@ class SliderPage(BasePage):
 
         if steps_to_move > 0:
             for _ in range(steps_to_move):
-                self.unique_element.send_keys(Keys.ARROW_RIGHT)
+                self.slider.send_keys(Keys.ARROW_RIGHT)
 
     def get_slider_min_value(self) -> float:
-        return float(self.unique_element.get_attribute("min"))
+        return float(self.slider.get_attribute("min"))
 
     def get_slider_max_value(self) -> float:
-        return float(self.unique_element.get_attribute("max"))
+        return float(self.slider.get_attribute("max"))

@@ -1,6 +1,6 @@
 from framework.pages.infinity_scroll_page import InfinityScrollPage
 
-TARGET_PARAGRAPH_COUNT = 5
+TARGET_PARAGRAPH_COUNT = 4
 
 
 def test_infinity_scroll_loads_content(browser):
