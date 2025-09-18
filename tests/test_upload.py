@@ -19,5 +19,7 @@ def test_upload_with_dialog_window(browser, temp_file):
     upload_page.wait_for_open()
     upload_page.upload_file_with_dialog(temp_file)
 
-    assert upload_page.get_uploaded_file_name() == os.path.basename(
-        temp_file), "Имя файла не появилось после загрузки через диалог"
+    uploaded_name = upload_page.get_uploaded_file_name()
+    expected_name = os.path.basename(temp_file)
+
+    assert uploaded_name == expected_name, f"Ожидалось '{expected_name}', получено '{uploaded_name}'"

@@ -19,7 +19,7 @@ def browser():
 @pytest.fixture
 def temp_file():
     file_name = "test_upload_file.txt"
-    with open(file_name, "w") as f:
+    with open(file_name, "w", encoding="utf-8") as f:
         f.write("Это файл для автоматизации")
     file_path = os.path.abspath(file_name)
     yield file_path
