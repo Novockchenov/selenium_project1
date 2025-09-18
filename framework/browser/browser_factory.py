@@ -18,6 +18,11 @@ class BrowserFactory:
         Logger.info(f"Запуск webdriver '{driver_name.value}' с опциями '{options}'")
         if driver_name == AvailableDriverName.CHROME:
             chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument("--headless=new")  # без графики
+            chrome_options.add_argument("--no-sandbox")  # нужно в Docker
+            chrome_options.add_argument("--disable-dev-shm-usage")  # уменьшает проблемы с /dev/shm
+            chrome_options.add_argument("--disable-gpu")  # иногда помогает на headless
+            chrome_options.add_argument("--user-data-dir=/tmp/chrome-profile")
             for option in options:
                 chrome_options.add_argument(option)
             driver = webdriver.Chrome(options=chrome_options)
