@@ -3,9 +3,6 @@ import pytest
 from framework.browser.browser_factory import BrowserFactory
 from framework.browser.browser import Browser
 from framework.logger.logger import Logger
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 @pytest.fixture
