@@ -4,7 +4,8 @@ __pycache__/
 .idea
 # C extensions
 *.so
-
+.vscode/
+venv/
 logs/
 *.log
 

@@ -1,5 +1,7 @@
 import time
 
+from selenium.webdriver import ActionChains
+
 from framework.pages.base_page import BasePage
 from framework.elements.web_element import WebElement
 from framework.elements.button import Button
@@ -11,7 +13,7 @@ class FileUploadPage(BasePage):
     UNIQUE_ELEMENT_LOC = "file-upload"
     UPLOAD_INPUT_LOC = "file-upload"
     UPLOAD_BUTTON_LOC = "file-submit"
-    CHOOSE_FILE_LABEL_LOC = "*[@id='file-upload']"
+    CHOOSE_FILE_LABEL_LOC = "file-upload"
     UPLOADED_FILES_PANEL_LOC = "uploaded-files"
 
     def __init__(self, browser):
@@ -25,26 +27,33 @@ class FileUploadPage(BasePage):
     def upload_file_with_send_keys(self, file_path: str):
         """Самый надежный способ: отправка пути напрямую в input."""
         self.unique_element.send_keys(file_path)
-        self.upload_button.click()
+        self.upload_button.js_click()
 
-    def upload_file_with_dialog3(self, file_path: str):
-        """Загружает файл через системный диалог и PyAutoGui.
-           Работает только с GUI (НЕ headless).
-        """
-        # Используем js_click(), потому что обычный .click()
-        # на <input type=file> упрётся в InvalidArgumentException.
-        self.unique_element.js_click()
-
-        # Теперь PyAutoGui вводит путь к файлу в открывшийся диалог.
+    def upload_file_with_dialog4(self, file_path: str):
+        """Способ с вызовом системного окна и его обработкой через PyAutoGui."""
+        try:
+            self.unique_element.js_click()  # self.choose_file_label.click()
+        except Exception:
+            self.unique_element.js_click()  # self.choose_file_label.js_click()
         PyAutoGuiUtilities.upload_file(file_path)
-
-        # Жмём кнопку Upload (это уже Selenium)
         self.upload_button.click()
 
     def upload_file_with_dialog(self, file_path: str):
-        """Способ с вызовом системного окна и его обработкой через PyAutoGui."""
-        self.choose_file_label.js_click()  # click()  # ← Это откроет диалог!
+
+        el = self.choose_file_label.wait_for_clickable()
+        self.browser.execute_script("arguments[0].scrollIntoView({block: 'center'});", el)
+
+        try:
+            ActionChains(self.browser.driver).move_to_element(el).pause(0.1).click(el).perform()
+        except Exception:
+
+            el = self.choose_file_label.wait_for_clickable()
+            el.click()
+
+        time.sleep(0.3)
+
         PyAutoGuiUtilities.upload_file(file_path)
+
         self.upload_button.click()
 
     def get_uploaded_file_name(self) -> str:
