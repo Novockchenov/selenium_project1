@@ -5,7 +5,6 @@ from selenium.webdriver import ActionChains
 from framework.pages.base_page import BasePage
 from framework.elements.web_element import WebElement
 from framework.elements.button import Button
-from framework.utils.pyautogui_utils import PyAutoGuiUtilities
 
 
 class FileUploadPage(BasePage):
@@ -29,16 +28,9 @@ class FileUploadPage(BasePage):
         self.unique_element.send_keys(file_path)
         self.upload_button.js_click()
 
-    def upload_file_with_dialog4(self, file_path: str):
-        """Способ с вызовом системного окна и его обработкой через PyAutoGui."""
-        try:
-            self.unique_element.js_click()  # self.choose_file_label.click()
-        except Exception:
-            self.unique_element.js_click()  # self.choose_file_label.js_click()
-        PyAutoGuiUtilities.upload_file(file_path)
-        self.upload_button.click()
-
     def upload_file_with_dialog(self, file_path: str):
+
+        from framework.utils.pyautogui_utils import PyAutoGuiUtilities
 
         el = self.choose_file_label.wait_for_clickable()
         self.browser.execute_script("arguments[0].scrollIntoView({block: 'center'});", el)
